@@ -56,13 +56,14 @@ public class textGenerator implements Serializable {
         for (int i = 1; i < random.nextInt(20); i++) {
             paragraph = paragraph + generateSentence();
         }
-        paragraph += "\n";
+        paragraph += "\r\n";
         return paragraph;
     }
 
     public void generateFiles(String path, int n, int size, int probability) {
         this.probability = probability;
-        for (int i = 1; i < n; i++) {
+
+        for (int i = 1; i < n+1; i++) {
             String filepath = String.format("%stext%2d", path, i);
             try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(filepath))) {
                 try (FileInputStream fileInputStream = new FileInputStream(filepath)) {
