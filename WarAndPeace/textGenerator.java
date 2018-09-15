@@ -14,7 +14,7 @@ public class textGenerator implements Serializable {
         this.wordsArray = wordsArray;
     }
 
-    public String[] generateWords(int numberOfWords) {
+    private String[] generateWords(int numberOfWords) {
         String[] randomString = new String[numberOfWords];
         Random random = new Random();
         for (int i = 0; i < numberOfWords; i++) {
@@ -27,7 +27,7 @@ public class textGenerator implements Serializable {
         return randomString;
     }
 
-    public String generateSentence() {
+    private String generateSentence() {
         Random random = new Random();
         String[] endSymbols = {". ", "? ", "! ",};
         int probability = random.nextInt(this.probability) + 1;
@@ -50,7 +50,7 @@ public class textGenerator implements Serializable {
         return sentence;
     }
 
-    public String generateParagraph() {
+    private String generateParagraph() {
         Random random = new Random();
         String paragraph = generateSentence();
         for (int i = 1; i < random.nextInt(20); i++) {
@@ -65,22 +65,20 @@ public class textGenerator implements Serializable {
 
         for (int i = 1; i < n+1; i++) {
             String filepath = String.format("%stext%2d", path, i);
-            try (DataOutputStream dataOutputStream = new DataOutputStream(new FileOutputStream(filepath))) {
-                try (FileInputStream fileInputStream = new FileInputStream(filepath)) {
-                    while (fileInputStream.available() < size) {
-                        dataOutputStream.writeUTF(generateParagraph());
-                        System.out.println("Файл записан!");
+            File file = new File(filepath);
+                try (FileOutputStream fileOutputStream = new FileOutputStream(filepath)) {
+                    while (file.length() < size) {
+                        String content = generateParagraph();
+                        byte[] buffer = content.getBytes();
+                        fileOutputStream.write(buffer, 0,
+                                buffer.length);
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
+            System.out.println("File created");
             }
         }
     }
-}
